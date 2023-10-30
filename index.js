@@ -1,26 +1,38 @@
 require("dotenv").config(); //carrega o pacote de configurações
 
 const db = require("./db")
-const { logIn } = require("./login");
-
+//IMPORTS
+const ranking = require("./ranking/ranking")
+const logIn = require("./login/login")
 const express = require("express"); //carregamento da biblioteca express
-
-const session = require("express-session");
-
-const app = express(); //cria aplicação chamando o express como função
 
 var cors  = require("cors"); //biblioteca pra adequar as requisições pro protocolo CORS, sem isso dá eror
 
 var parser = require("body-parser") //biblioteca que transforma bytes em jsone vice e versa 
 
+const app = express(); //cria aplicação chamando o express como função
+
+
+//SELECT TENISTA POR ID
+app.get("/tenistas/:id", (request, response) => {
+	const id = parseInt(request.params.id);
+	response.json(db.selectTenistas(id)); 
+}) 
+
 app.use(cors())
 
 var jsonParser = parser.json()
 
-// app.get("/clientes", (request, response) => {
-// 	response.json(db.selectClientes()); 
-// }) // * *  rota que lista os cadastros
+//SELECT TENISTAS
+app.get("/tenistas", async (request, response) => {
+	const results = await ranking.selectTenistas(request.params);
+	console.log(results)
+	console.log(results[0])
+	response.status(200).json(results[0]); //Ver se o Array é necessário
+})
 
+
+//LOGIN
 app.post("/login", jsonParser, async (request, response) => {
 	try {
 		let logged = await logIn(request.body);
@@ -31,12 +43,15 @@ app.post("/login", jsonParser, async (request, response) => {
 	}
 })
 
+//ROTA PADRÃO
 app.get("/", (request, response, next) => {
 	response.json ({
 			message: "...."
 	})
 }) //rota padrão: nesse caso é /
 
+
+//SUBIR WEB API
 app.listen(process.env.PORT, () => { //sobe a web api na porta 
 	console.log("App rodando!");
 }); 
