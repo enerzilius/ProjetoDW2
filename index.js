@@ -24,7 +24,7 @@ app.use(cors())
 var jsonParser = parser.json()
 
 //SELECT TENISTAS
-app.get("/tenistas", async (request, response) => {
+app.get("/tenistas", jsonParser, async (request, response) => {
 	const results = await ranking.selectTenistas(request.params);
 	console.log(results)
 	console.log(results[0])
