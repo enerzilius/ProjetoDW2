@@ -1,14 +1,17 @@
-const { response } = require("express");
 const mysql = require("mysql2/promise");
 
 const client = mysql.createPool(process.env.CONNECTION_STRING);
 
-async function login(credentials){
-    await client.query("SELECT * FROM loginadm WHERE email LIKE ? AND senha = ?", [credentials.user, credentials.password], function (err, results){
-        if (results.length > 0){
-            return true
-        }else{
-            return false
-        }
-    });
+async function logIn(credentials){
+    try {
+        console.log(credentials)
+        let results = await client.query("SELECT * FROM loginadm WHERE email LIKE ? AND senha = ?", [credentials.user, credentials.password])
+        console.log(results[0])
+        return (results[0].length >= 1) ? true : false;
+    } catch (error) {
+        // console.error(error)
+    }
+}
+module.exports = {
+    logIn
 }
