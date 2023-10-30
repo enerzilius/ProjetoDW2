@@ -1,6 +1,5 @@
 require("dotenv").config(); //carrega o pacote de configurações
 
-const db = require("./db")
 //IMPORTS
 const ranking = require("./ranking/ranking")
 const logIn = require("./login/login")
@@ -14,23 +13,20 @@ const app = express(); //cria aplicação chamando o express como função
 
 
 //SELECT TENISTA POR ID
-app.get("/tenistas/:id", (request, response) => {
-	const id = parseInt(request.params.id);
-	response.json(db.selectTenistas(id)); 
-}) 
+// app.get("/tenistas/:id", (request, response) => {
+// 	const id = parseInt(request.params.id);
+// 	response.json(db.selectTenistas(id)); 
+// }) 
 
 app.use(cors())
 
 var jsonParser = parser.json()
 
 //SELECT TENISTAS
-app.get("/tenistas", jsonParser, async (request, response) => {
-	const results = await ranking.selectTenistas(request.params);
-	console.log(results)
-	console.log(results[0])
-	response.status(200).json(results[0]); //Ver se o Array é necessário
+app.post("/tenistas", jsonParser, async (request, response) => {
+	const results = await ranking.selectTenistas(request.body);
+	response.status(200).json(results); //Ver se o Array é necessário
 })
-
 
 //LOGIN
 app.post("/login", jsonParser, async (request, response) => {
