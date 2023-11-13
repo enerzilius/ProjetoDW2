@@ -2,6 +2,7 @@ require("dotenv").config(); //carrega o pacote de configurações
 
 //IMPORTS
 const ranking = require("./ranking/ranking")
+// const logIn = require("./login")
 const logIn = require("./login/login")
 const express = require("express"); //carregamento da biblioteca express
 
@@ -27,11 +28,15 @@ app.post("/tenistas", jsonParser, async (request, response) => {
 	const results = await ranking.selectTenistas(request.body);
 	response.status(200).json(results); //Ver se o Array é necessário
 })
+app.post("/tenistasGeral", jsonParser, async (request, response) => {
+	const results = await ranking.selectGeral(request.body);
+	response.status(200).json(results); //Ver se o Array é necessário
+})
 
 //LOGIN
 app.post("/login", jsonParser, async (request, response) => {
 	try {
-		let logged = await logIn(request.body);
+		let logged = await logIn.logIn(request.body);
 		console.log(logged)
 		logged ? response.status(200).json({message: 'Logado com sucesso!'}) : response.status(204).json({message: 'Usuário ou senha incorretos!'})
 	} catch (error) {
