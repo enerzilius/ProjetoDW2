@@ -12,6 +12,11 @@ var parser = require("body-parser") //biblioteca que transforma bytes em jsone v
 
 const app = express(); //cria aplicação chamando o express como função
 
+app.use(express.json()); //aparentemente faz a mesma coisa que o var parser
+
+app.use(cors())
+
+var jsonParser = parser.json()
 
 //SELECT TENISTA POR ID
 // app.get("/tenistas/:id", (request, response) => {
@@ -19,9 +24,22 @@ const app = express(); //cria aplicação chamando o express como função
 // 	response.json(db.selectTenistas(id)); 
 // }) 
 
-app.use(cors())
+// CADASTRAR TENISTA
+app.post("/tenistas", (request, response) => {
+	const tenista = request.body;
+	crud.cadastrarTenista(tenista);
+	response.sendStatus(201);
+})
 
-var jsonParser = parser.json()
+
+// ATUALIZAR TENISTA
+app.patch("/tenistas/:id", (request, response) => {
+	const id = parseInt(request.params.id);
+	const tenista = request.body;
+	crud.atualizarTenista(id, tenista);
+	response.sendStatus(200);
+})
+
 
 //SELECT TENISTAS
 app.post("/tenistas", jsonParser, async (request, response) => {
@@ -33,6 +51,7 @@ app.post("/tenistasGeral", jsonParser, async (request, response) => {
 	response.status(200).json(results); //Ver se o Array é necessário
 })
 
+
 //LOGIN
 app.post("/login", jsonParser, async (request, response) => {
 	try {
@@ -43,6 +62,7 @@ app.post("/login", jsonParser, async (request, response) => {
 		throw error;
 	}
 })
+
 
 //ROTA PADRÃO
 app.get("/", (request, response, next) => {
