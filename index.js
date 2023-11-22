@@ -19,25 +19,34 @@ app.use(cors())
 var jsonParser = parser.json()
 
 //SELECT TENISTA POR ID
-// app.get("/tenistas/:id", (request, response) => {
-// 	const id = parseInt(request.params.id);
-// 	response.json(db.selectTenistas(id)); 
-// }) 
+app.get("/tenistas/:id", async (request, response) => {
+	const id = parseInt(request.params.id);
+	const results = await crud.selectTenistaPorID(id);
+	response.json(results); 
+}) 
 
 // CADASTRAR TENISTA
-app.post("/tenistas", (request, response) => {
+app.post("/tenistas", async (request, response) => {
 	const tenista = request.body;
-	crud.cadastrarTenista(tenista);
+	await crud.cadastrarTenista(tenista);
 	response.sendStatus(201);
 })
 
 
 // ATUALIZAR TENISTA
-app.patch("/tenistas/:id", (request, response) => {
+app.patch("/tenistas/:id", async (request, response) => {
 	const id = parseInt(request.params.id);
 	const tenista = request.body;
-	crud.atualizarTenista(id, tenista);
+	await crud.atualizarTenista(id, tenista);
 	response.sendStatus(200);
+})
+
+
+// EXCLUIR CADASTRO DE TENISTA
+app.delete("/tenistas/:id", async (request, response) => {
+	const id = parseInt(request.params.id);
+	await crud.deleteCadastro(id); 
+	response.sendStatus(204);
 })
 
 

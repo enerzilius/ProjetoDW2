@@ -16,6 +16,7 @@ async function selectTenistas(params){
 	console.log(results[0])
 	return results[0];
 }
+
 async function selectGeral(params){
     console.log(params)
     const results = await client.query(
