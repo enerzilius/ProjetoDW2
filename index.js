@@ -4,6 +4,7 @@ require("dotenv").config(); //carrega o pacote de configurações
 const ranking = require("./ranking/ranking")
 // const logIn = require("./login")
 const logIn = require("./login/login")
+const crud = require("./crud")
 const express = require("express"); //carregamento da biblioteca express
 
 var cors  = require("cors"); //biblioteca pra adequar as requisições pro protocolo CORS, sem isso dá eror
@@ -26,7 +27,8 @@ app.get("/tenistas/:id", async (request, response) => {
 }) 
 
 // CADASTRAR TENISTA
-app.post("/tenistas", async (request, response) => {
+app.post("/addTenista", async (request, response) => {
+	console.log(request.body)
 	const tenista = request.body;
 	await crud.cadastrarTenista(tenista);
 	response.sendStatus(201);
@@ -34,7 +36,7 @@ app.post("/tenistas", async (request, response) => {
 
 
 // ATUALIZAR TENISTA
-app.patch("/tenistas/:id", async (request, response) => {
+app.patch("/updateTenistas/:id", async (request, response) => {
 	const id = parseInt(request.params.id);
 	const tenista = request.body;
 	await crud.atualizarTenista(id, tenista);
@@ -43,7 +45,7 @@ app.patch("/tenistas/:id", async (request, response) => {
 
 
 // EXCLUIR CADASTRO DE TENISTA
-app.delete("/tenistas/:id", async (request, response) => {
+app.delete("/deleteTenistas/:id", async (request, response) => {
 	const id = parseInt(request.params.id);
 	await crud.deleteCadastro(id); 
 	response.sendStatus(204);
